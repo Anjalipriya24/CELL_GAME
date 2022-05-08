@@ -64,7 +64,7 @@ const Grid = (props) => {
       }
     }
     setGrid(nextGeneration);
-  }, [index]);
+  }, );
   return (
     <div>
       <h1 style={{ textAlign: 'center', marginTop: '0rem' }}>Cell Game</h1>
