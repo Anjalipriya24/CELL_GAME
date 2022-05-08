@@ -1,8 +1,10 @@
 import './App.css';
-import Grid from './Component/Grid';
+// import Grid from './Component/Grid';
 
 function App() {
-  return <Grid />;
+  return (
+    <div>Hello world</div>
+  );
 }
 
 export default App;
