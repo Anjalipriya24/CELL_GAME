@@ -51,10 +51,10 @@ jobs:
       - name: Building the Docker Image
         run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:latest .
         
-      - name: Scanning Docker the Image
-        uses: Azure/container-scan@v0
-        with:
-          image-name: underconstruction.jfrog.io/docker-dev/cell-game:latest
+#       - name: Scanning Docker the Image
+#         uses: Azure/container-scan@v0
+#         with:
+#           image-name: underconstruction.jfrog.io/docker-dev/cell-game:latest
         
       - name: Pushing the Image into our Artifactory
         run: docker push underconstruction.jfrog.io/docker-dev/cell-game:latest
