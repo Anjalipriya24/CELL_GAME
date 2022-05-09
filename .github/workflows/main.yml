@@ -1,5 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-name: CI-CD
+name: Docker Image Ci-Cd Pipeline
 
 # Controls when the action will run. 
 on:
@@ -9,8 +9,7 @@ on:
   pull_request:
     branches: [ main ]
   # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-  
+  workflow_dispatch:  
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains multiple jobs
@@ -19,8 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x]
-        
+        node-version: [14.x]    
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -35,29 +33,29 @@ jobs:
       - name: Install dependencies
         run: |
           npm ci 
-      # build and test the apps     
+      # build the apps     
       - name: build
         run: |
           npm run build
-         
-
-      - name: Login to JFrog   
-        uses: docker/login-action@v1
-        with:
+          
+  Jfrog-Login:
+   runs-on: ubuntu-latest
+   steps:
+    - uses: docker/login-action@v1
+    - name: Login to JFrog  
+    
+      with:
           registry: underconstruction.jfrog.io
           username: ${{ secrets.JFROG_USERNAME}}
           password: ${{ secrets.JFROG_PASSWORD}}
           
-      - name: Building the Docker Image
-        run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }} .
+    - name: Building the Docker Image
+      run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }} .
         
-#       - name: Scanning Docker the Image
-#         uses: Azure/container-scan@v0
-#         with:
-#           image-name: underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
-      - name: Run Trivy vulnerability scanner
-        uses: aquasecurity/trivy-action@master
-        with:
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
           image-ref: 'underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}'
           exit-code: '0'
           ignore-unfixed: true 
@@ -67,11 +65,11 @@ jobs:
           severity: 'LOW,MEDIUM'
           
           
-      - name: Pushing the Image into our Artifactory
-        run: docker push underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
+    - name: Pushing the Image into our Artifactory
+      run: docker push underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
         
         
-      - name: Upload Trivy scan results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v1
-        with:
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v1
+      with:
           sarif_file: 'trivy-results.sarif'
