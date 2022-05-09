@@ -59,11 +59,10 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'underconstruction.jfrog.io/docker-dev/cell-game:latest'
-          format: 'table'
           exit-code: '1'
           ignore-unfixed: true
           vuln-type: 'os,library'
-          severity: 'CRITICAL,HIGH'
+          severity: 'LOW,MEDIUM'
           
           
       - name: Pushing the Image into our Artifactory
