@@ -40,9 +40,12 @@ jobs:
           
   Jfrog-Login:
    runs-on: ubuntu-latest
+   needs: build_test
    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Login to JFrog 
     - uses: docker/login-action@v1
-    - name: Login to JFrog  
     
       with:
           registry: underconstruction.jfrog.io
