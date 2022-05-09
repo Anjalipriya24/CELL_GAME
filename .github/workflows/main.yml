@@ -60,11 +60,18 @@ jobs:
         with:
           image-ref: 'underconstruction.jfrog.io/docker-dev/cell-game:latest'
           exit-code: '0'
-          ignore-unfixed: true
+          ignore-unfixed: true 
+          format: 'sarif'
+          output: 'trivy-results.sarif'
           vuln-type: 'os,library'
           severity: 'LOW,MEDIUM'
           
           
       - name: Pushing the Image into our Artifactory
         run: docker push underconstruction.jfrog.io/docker-dev/cell-game:latest
-         
+        
+        
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
