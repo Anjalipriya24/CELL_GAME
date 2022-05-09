@@ -49,16 +49,16 @@ jobs:
           password: ${{ secrets.JFROG_PASSWORD}}
           
       - name: Building the Docker Image
-        run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:latest .
+        run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}:${{ github.run_attempt }} .
         
 #       - name: Scanning Docker the Image
 #         uses: Azure/container-scan@v0
 #         with:
-#           image-name: underconstruction.jfrog.io/docker-dev/cell-game:latest
+#           image-name: underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}:${{ github.run_attempt }}
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'underconstruction.jfrog.io/docker-dev/cell-game:latest'
+          image-ref: 'underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}:${{ github.run_attempt }}'
           exit-code: '0'
           ignore-unfixed: true 
           format: 'sarif'
@@ -68,7 +68,7 @@ jobs:
           
           
       - name: Pushing the Image into our Artifactory
-        run: docker push underconstruction.jfrog.io/docker-dev/cell-game:latest
+        run: docker push underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}:${{ github.run_attempt }}
         
         
       - name: Upload Trivy scan results to GitHub Security tab
