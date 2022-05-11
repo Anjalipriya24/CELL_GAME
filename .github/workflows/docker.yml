@@ -27,7 +27,6 @@ jobs:
       - name: build
         run: |
           npm run build
-
   Scanning:
     runs-on: ubuntu-latest
     needs: Installing-App-Dependencies
@@ -44,42 +43,21 @@ jobs:
           vuln-type: 'os,library'
           severity: 'LOW,MEDIUM'
 
-  Docker-Build:
+  Docker-Build-and-Push-to-Artifactory:
     runs-on: ubuntu-latest
     needs: Scanning
     steps:
-      - name: Jfrog login 
+      - uses: actions/checkout@v2
+      
+      - name: Jfrog Login
         uses: docker/login-action@v1
         with:
           registry: underconstruction.jfrog.io
           username: ${{ secrets.JFROG_USERNAME}}
           password: ${{ secrets.JFROG_PASSWORD}}
-      - uses: actions/checkout@v2
+
       - name: Building the Docker Image
         run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }} .
-     
-      - uses: actions/upload-artifact@v2
-        with:
-          name: my-artifact
-          path: underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
-          if-no-files-found: error
-  
-  Docker-validate:
-    runs-on: ubuntu-latest
-    needs: Docker-Build
-    steps:
-      - name: Jfrog login 
-        uses: docker/login-action@v1
-        with:
-          registry: underconstruction.jfrog.io
-          username: ${{ secrets.JFROG_USERNAME}}
-          password: ${{ secrets.JFROG_PASSWORD}}
-
-      - uses: actions/checkout@v2
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: my-artifact  
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -92,23 +70,10 @@ jobs:
           vuln-type: 'os,library'
           severity: 'LOW,MEDIUM'
 
-  Push-To-Artifactory:
-    runs-on: ubuntu-latest
-    needs: Docker-validate
-    steps:
-      - name: Jfrog login 
-        uses: docker/login-action@v1
-        with:
-          registry: underconstruction.jfrog.io
-          username: ${{ secrets.JFROG_USERNAME}}
-          password: ${{ secrets.JFROG_PASSWORD}}
-      - uses: actions/checkout@v2
-
-      - uses: actions/download-artifact@v2
-        with:
-          name: my-artifact
-          
       - name: Pushing the Image into our Artifactory
         run: docker push underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
 
-  
+      - name: Upload Trivy scan results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: 'trivy-results.sarif'
