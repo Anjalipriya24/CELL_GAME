@@ -44,32 +44,22 @@ jobs:
           vuln-type: 'os,library'
           severity: 'LOW,MEDIUM'
 
-  Docker-Build:
+  Docker-Build-and-Push-to-Artifactory:
     runs-on: ubuntu-latest
     needs: Scanning
     steps:
-      - name: Jfrog login 
+      - uses: actions/checkout@v2
+      
+      - name: Jfrog Login
         uses: docker/login-action@v1
         with:
           registry: underconstruction.jfrog.io
           username: ${{ secrets.JFROG_USERNAME}}
           password: ${{ secrets.JFROG_PASSWORD}}
-      - uses: actions/checkout@v2
+
       - name: Building the Docker Image
         run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }} .
-     
-  
-  Docker-validate:
-    runs-on: ubuntu-latest
-    needs: Docker-Build
-    steps:
-      - name: Jfrog login 
-        uses: docker/login-action@v1
-        with:
-          registry: underconstruction.jfrog.io
-          username: ${{ secrets.JFROG_USERNAME}}
-          password: ${{ secrets.JFROG_PASSWORD}}
-      - uses: actions/checkout@v2
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
@@ -81,23 +71,14 @@ jobs:
           vuln-type: 'os,library'
           severity: 'LOW,MEDIUM'
 
-  Push-To-Artifactory:
-    runs-on: ubuntu-latest
-    needs: Docker-validate
-    steps:
-      - name: Jfrog login 
-        uses: docker/login-action@v1
-        with:
-          registry: underconstruction.jfrog.io
-          username: ${{ secrets.JFROG_USERNAME}}
-          password: ${{ secrets.JFROG_PASSWORD}}
-      - uses: actions/checkout@v2
       - name: Pushing the Image into our Artifactory
         run: docker push underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
 
+    
+
   Upload-Trivy-Scan-Results:
     runs-on: ubuntu-latest
-    needs: Push-To-Artifactory
+    needs: Docker-Build-and-Push-to-Artifactory
     steps:
       - uses: actions/checkout@v2
       - name: Upload Trivy scan results to GitHub Security tab
