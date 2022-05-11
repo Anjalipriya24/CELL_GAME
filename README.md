@@ -32,3 +32,6 @@ This Repository serves as an implementation for the Cell Game problem.
   4. Any dead cell with exactly three live neighbors comes to life. 
  * There is also an index associated with each cell, you can display them by clicking on "Display Name".
  * Typing any index in the Search Bar will highlight that cell in the grid.
+
+
+# https://underconstruction.jfrog.io/ui/repos/tree/General/docker-dev/cell-game
