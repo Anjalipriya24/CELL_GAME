@@ -34,4 +34,4 @@ This Repository serves as an implementation for the Cell Game problem.
  * Typing any index in the Search Bar will highlight that cell in the grid.
 
 
-# https://underconstruction.jfrog.io/ui/repos/tree/General/docker-dev/cell-game
+
