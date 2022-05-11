@@ -46,7 +46,7 @@ jobs:
 
   Jfrog-Login:
     runs-on: ubuntu-latest
-    needs: Installing-App-Dependencies
+    needs: Scanning
     steps:
       - uses: actions/checkout@v2
       - name: Login to JFrog 
