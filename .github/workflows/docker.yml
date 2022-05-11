@@ -68,12 +68,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
-          name: docker-build
-          path: /tmp/image.tar
-      - uses: actions/upload-artifact@v2
-        with:
           name: underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
-          path: underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
+          path: /tmp/image.tar
           if-no-files-found: error
   
   Docker-validate:
