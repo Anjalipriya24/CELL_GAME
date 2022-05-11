@@ -44,30 +44,31 @@ jobs:
           vuln-type: 'os,library'
           severity: 'LOW,MEDIUM'
 
-  Jfrog-Login:
+  Docker-Build:
     runs-on: ubuntu-latest
     needs: Scanning
     steps:
-      - uses: actions/checkout@v2
-      - name: Login to JFrog 
+      - name: Jfrog login 
         uses: docker/login-action@v1
         with:
           registry: underconstruction.jfrog.io
           username: ${{ secrets.JFROG_USERNAME}}
           password: ${{ secrets.JFROG_PASSWORD}}
-
-  Docker-Build:
-    runs-on: ubuntu-latest
-    needs: Jfrog-Login
-    steps:
       - uses: actions/checkout@v2
       - name: Building the Docker Image
         run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }} .
+     
   
   Docker-validate:
     runs-on: ubuntu-latest
     needs: Docker-Build
     steps:
+      - name: Jfrog login 
+        uses: docker/login-action@v1
+        with:
+          registry: underconstruction.jfrog.io
+          username: ${{ secrets.JFROG_USERNAME}}
+          password: ${{ secrets.JFROG_PASSWORD}}
       - uses: actions/checkout@v2
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -84,6 +85,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: Docker-validate
     steps:
+      - name: Jfrog login 
+        uses: docker/login-action@v1
+        with:
+          registry: underconstruction.jfrog.io
+          username: ${{ secrets.JFROG_USERNAME}}
+          password: ${{ secrets.JFROG_PASSWORD}}
       - uses: actions/checkout@v2
       - name: Pushing the Image into our Artifactory
         run: docker push underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }}
