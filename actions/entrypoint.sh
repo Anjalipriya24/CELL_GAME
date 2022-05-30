@@ -30,7 +30,7 @@ echo "Version: ${version}"
 if [ -z ${version} ]
 then
     echo "Couldn't determine version"
-    git tag -a 0.0.0 -m "creating a dummy release"
+    git tag 0.0.0 
     git push origin 0.0.0
     version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
     echo "Version: ${version}"
