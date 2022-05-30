@@ -15,7 +15,14 @@ done
 
 shift $(($OPTIND - 1))
 
-version="0.0.0"
+#version="0.0.0"
+echo "cd to github workspace"
+cd ${GITHUB_WORKSPACE}
+git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)'
+
+version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
+echo "Version: ${version}"
+
 
 # Build array from version string.
 
