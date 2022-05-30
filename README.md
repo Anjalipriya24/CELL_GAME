@@ -13,7 +13,7 @@ This Repository serves as an implementation for the Cell Game problem.
  * Once its finished simply execute the following line in the Terminal:
  
   bash
- npm start 
+ npm start
  
  
  <p align="center">
