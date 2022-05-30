@@ -18,10 +18,6 @@ jobs:
         with:
           version-level: '-p'
           
-      - name: Update the Tag
-        run: |
-          git tag  ${{ steps.increment-version.outputs.version }}
-          git push origin ${{ steps.increment-version.outputs.version }}
           
 #       - name: Jfrog Login
 #         uses: docker/login-action@v1
