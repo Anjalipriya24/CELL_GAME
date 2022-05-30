@@ -18,6 +18,7 @@ shift $(($OPTIND - 1))
 #version="0.0.0"
 echo "cd to github workspace"
 git config --global --add safe.directory /github/workspace
+echo ${GITHUB_WORKSPACE}
 cd ${GITHUB_WORKSPACE}/.github/actions
 git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)'
 
