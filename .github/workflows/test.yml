@@ -1,0 +1,23 @@
+name: Docker Image Ci-Cd Pipeline
+on:
+  push:
+     branches: [ main ]
+  pull_request:
+     branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  Docker-Build-and-Push-to-Artifactory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Increment Step
+        id: increment-version
+        uses: ./.github/actions
+        with:
+          version-level: '-m'
+
+      - name: Building the Docker Image
+        run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ steps.increment-version.outputs.version }} .
+          #run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }} .
