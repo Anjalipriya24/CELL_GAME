@@ -10,6 +10,7 @@ This Repository serves as an implementation for the Cell Game problem.
  bash
  npm install 
  
+ 
  * Once its finished simply execute the following line in the Terminal:
  
   bash
