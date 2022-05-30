@@ -54,9 +54,16 @@ jobs:
           registry: underconstruction.jfrog.io
           username: ${{ secrets.JFROG_USERNAME}}
           password: ${{ secrets.JFROG_PASSWORD}}
+          
+      - name: Increment Step
+        id: increment-version
+        uses: ./.github/actions
+        with:
+          version-level: '-m'
 
       - name: Building the Docker Image
-        run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }} .
+        run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ steps.increment-version.outputs.version }} .
+          #run: docker build --tag underconstruction.jfrog.io/docker-dev/cell-game:version-${{ github.run_id }}-${{ github.run_attempt }} .
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
