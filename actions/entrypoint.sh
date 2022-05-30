@@ -29,6 +29,7 @@ if [ -z ${version} ]
 then
     echo "Couldn't determine version"
     git tag 0.0.0
+    echo "0.0.0" >> fileName.txt
     version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
     echo "Version: ${version}"
 fi
