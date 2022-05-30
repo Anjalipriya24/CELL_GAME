@@ -21,7 +21,6 @@ git config --global --add safe.directory  ${GITHUB_WORKSPACE}
 cd ${GITHUB_WORKSPACE}
 echo got for-each-ref
 git for-each-ref 
-echo ${VERSION_DATA}
 
 version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
 echo "Version: ${version}"
@@ -30,9 +29,7 @@ if [ -z ${version} ]
 then
     echo "Couldn't determine version"
     git tag 0.0.0
-    echo "VERSION_DATA=0.0.0" >> ${GITHUB_ENV}
-    echo ${VERSION_DATA}
-    echo ${GITHUB_ENV}
+    git push origin 0.0.0
     version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
     echo "Version: ${version}"
 fi
