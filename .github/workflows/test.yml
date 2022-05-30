@@ -16,7 +16,7 @@ jobs:
         id: increment-version
         uses: ./.github/actions
         with:
-          version-level: '-m'
+          version-level: '-p'
           
       - name: Jfrog Login
         uses: docker/login-action@v1
