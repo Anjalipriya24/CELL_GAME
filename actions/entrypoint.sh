@@ -21,6 +21,10 @@ git config --global --add safe.directory  ${GITHUB_WORKSPACE}
 cd ${GITHUB_WORKSPACE}
 echo git for-each-ref
 git for-each-ref 
+git tag
+git tag -1
+git describe
+git describe -tags
 
 version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
 echo "Version: ${version}"
