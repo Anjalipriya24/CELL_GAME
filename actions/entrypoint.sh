@@ -28,7 +28,9 @@ echo "Version: ${version}"
 if [ -z ${version} ]
 then
     echo "Couldn't determine version"
-    exit 1
+    git update-ref refs/tags/v0.0 cac0cab538b970a37ea1e769cbbde608743bc96d
+    version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
+    echo "Version: ${version}"
 fi
 
 
