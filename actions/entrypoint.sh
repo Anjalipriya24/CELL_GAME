@@ -30,7 +30,7 @@ if [ -z ${version} ]
 then
     echo "Couldn't determine version"
     git tag 0.0.0
-    export VERSION_DATA = 0.0.0
+    export VERSION_DATA=0.0.0
     version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
     echo "Version: ${version}"
 fi
