@@ -15,19 +15,42 @@ done
 
 shift $(($OPTIND - 1))
 
+version=$1
+
 # Build array from version string.
 
-a=( "v0.0" )
-major_version=0
-# Check for v in version (e.g. v1.0 not just 1.0)
-v="${BASH_REMATCH[1]}"
-major_version=${BASH_REMATCH[2]}
-((major_version++))
-a[0]=${v}${major_version}
+a=( ${version//./ } )
 
+# If version string is missing or has the wrong number of members, show usage message.
 
-echo "${a[0]}"
-version=$(echo "${a[0]}")
-just_numbers=$(echo "${major_version}")
+if [ ${#a[@]} -ne 3 ]
+then
+  echo "usage: $(basename $0) [-Mmp] major.minor.patch"
+  exit 1
+fi
+
+# Increment version numbers as requested.
+
+if [ ! -z $major ]
+then
+  ((a[0]++))
+  a[1]=0
+  a[2]=0
+fi
+
+if [ ! -z $minor ]
+then
+  ((a[1]++))
+  a[2]=0
+fi
+
+if [ ! -z $patch ]
+then
+  ((a[2]++))
+fi
+
+echo "${a[0]}.${a[1]}.${a[2]}"
+version=$(echo "${a[0]}.${a[1]}.${a[2]}")
+just_numbers=$(echo "${major_version}.${a[1]}.${a[2]}")
 echo "::set-output name=version::${version}"
 echo "::set-output name=stripped-version::${just_numbers}"
