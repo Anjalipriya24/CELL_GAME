@@ -4,7 +4,7 @@ This Repository serves as an implementation for the Cell Game problem.
 
 ## Steps for Setting up the App:
 * Clone the Repository to your Local Machine.
-* Navigate to the cloned folder through the Terminal
+* Navigate to the cloned folder through the Terminal.
 * Make Sure you have [Node.js](https://nodejs.org/en/download/current/) installed.
 * Run the Following Command Through the Terminal:
  bash
