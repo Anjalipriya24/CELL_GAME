@@ -14,7 +14,7 @@ jobs:
       
       - name: Increment Step
         id: increment-version
-        uses: ./.github/actions
+        uses: ./actions
         with:
           version-level: '-p'
           
