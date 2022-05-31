@@ -24,7 +24,7 @@ git for-each-ref
 git tag -l
 git describe --tags --abbrev=0 
 
-version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
+version=$(git describe --tags --abbrev=0)
 echo "Version: ${version}"
 
 if [ -z ${version} ]
@@ -32,7 +32,7 @@ then
     echo "Couldn't determine version"
     git tag 0.0.0 
     git push origin 0.0.0
-    version=$(git for-each-ref refs/tags/ --count=1 --sort=-version:refname --format='%(refname:short)')
+    version=$(git describe --tags --abbrev=0 )
     echo "Version: ${version}"
 fi
 
