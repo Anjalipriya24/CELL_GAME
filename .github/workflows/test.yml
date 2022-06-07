@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       - run: git fetch --prune --unshallow
       
       - name: Increment Step
