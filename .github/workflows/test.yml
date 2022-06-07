@@ -5,6 +5,9 @@ on:
   pull_request:
      branches: [ main ]
   workflow_dispatch:
+  
+env:
+  VERSION_LEVEL: 0.0.0
 
 jobs:
   Docker-Build-and-Push-to-Artifactory:
@@ -19,15 +22,26 @@ jobs:
         with:
           version-level: '-p'
           
-          
+      - name: Set env variable
+        run: echo "::set-env name=VERSION_LEVEL::${{ steps.increment-version.outputs.version }}"
+        
+      - name: Print env variable
+        run: echo 'VERSION_LEVEL is' $TEST_RESULT
+        # prints 'TEST_RESULT is failure'
+   
+  Create-Release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ steps.increment-version.outputs.version }}
-          release_name: Release ${{ steps.increment-version.outputs.version }}
+          tag_name: $VERSION_LEVEL
+          release_name: Release $VERSION_LEVEL
           draft: false
           prerelease: false
 #       - name: Jfrog Login
