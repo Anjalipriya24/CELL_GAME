@@ -24,9 +24,7 @@ jobs:
           
       - name: Set env variable
         run: |
-          touch .env
-          echo "VERSION_LEVEL=${{ steps.increment-version.outputs.version}}" >> .env
-          cat .env
+          run: echo "::set-env name=VERSION_LEVEL::${{ steps.increment-version.outputs.version}}"
         
       - name: Print env variable
         run: echo 'VERSION_LEVEL is' $VERSION_LEVEL
